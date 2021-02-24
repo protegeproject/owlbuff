@@ -1,0 +1,289 @@
+syntax = 'proto3';
+
+package edu.stanford.protege.owlbuf;
+
+option java_multiple_files = true;
+option java_outer_classname = "OwlProtos";
+
+message Iri {
+    string lexicalValue = 1;
+}
+
+message Entity {
+    oneof entity {
+        Cls cls = 1;
+        ObjectProperty objectProperty = 2;
+        DataProperty dataProperty = 3;
+        AnnotationProperty annotationProperty = 4;
+        NamedIndividual namedIndividual = 5;
+        Datatype datatype = 6;
+    }
+}
+
+message Cls {
+    Iri iri = 1;
+}
+
+message ObjectProperty {
+    Iri iri = 1;
+}
+
+message DataProperty {
+    Iri iri = 1;
+}
+
+message AnnotationProperty {
+    Iri iri = 1;
+}
+
+message NamedIndividual {
+    Iri iri = 1;
+}
+
+message AnonymousIndividual {
+    string id = 1;
+}
+
+message Individual {
+    oneof individual {
+        NamedIndividual namedIndividual = 1;
+        AnonymousIndividual anonymousIndividual = 2;
+    }
+}
+
+message Literal {
+    string lexicalValue = 1;
+    Datatype datatype = 2;
+    string languageTag = 3;
+}
+
+message Datatype {
+    Iri iri = 1;
+}
+
+message ObjectPropertyInverse {
+    ObjectProperty property = 1;
+}
+
+message ObjectPropertyExpression {
+    oneof propertyExpr {
+        ObjectProperty ObjectProperty = 1;
+        ObjectPropertyInverse ObjectPropertyInverse = 2;
+    }
+}
+
+message ClassExpression {
+    oneof classExpr {
+        Cls OwlClass = 1;
+        ObjectIntersectionOf ObjectIntersectionOf = 2;
+        ObjectUnionOf ObjectUnionOf = 3;
+        ObjectComplementOf ObjectComplementOf = 4;
+        ObjectOneOf ObjectOneOf = 5;
+
+        ObjectSomeValuesFrom ObjectSomeValuesFrom = 6;
+        ObjectAllValuesFrom ObjectAllValuesFrom = 7;
+        ObjectHasValue ObjectHasValue = 8;
+        ObjectMinCardinality ObjectMinCardinality = 9;
+        ObjectMaxCardinality ObjectMaxCardinality = 10;
+        ObjectExactCardinality ObjectExactCardinality = 11;
+
+        DataSomeValuesFrom DataSomeValuesFrom = 12;
+        DataAllValuesFrom DataAllValuesFrom = 13;
+        DataHasValue DataHasValue = 14;
+        DataMinCardinality DataMinCardinality = 15;
+        DataMaxCardinality DataMaxCardinality = 16;
+        DataExactCardinality DataExactCardinality = 17;
+
+        ObjectHasSelf ObjectHasSelf = 18;
+
+    }
+}
+
+message ObjectIntersectionOf {
+    repeated ClassExpression classExpressions = 1;
+}
+
+message ObjectUnionOf {
+    repeated ClassExpression classExpressions = 1;
+}
+
+message ObjectComplementOf {
+    ClassExpression classExpr = 1;
+}
+
+message ObjectOneOf {
+    repeated Individual individual = 1;
+}
+
+message ObjectSomeValuesFrom {
+    ObjectPropertyExpression property = 1;
+    ClassExpression filler = 2;
+}
+
+message ObjectAllValuesFrom {
+    ObjectPropertyExpression property = 1;
+    ClassExpression filler = 2;
+}
+
+message ObjectHasValue {
+    ObjectPropertyExpression property = 1;
+    Individual filler = 2;
+}
+
+message ObjectMinCardinality {
+    ObjectPropertyExpression property = 1;
+    ClassExpression filler = 2;
+    int32 cardinality = 3;
+}
+
+message ObjectMaxCardinality {
+    ObjectPropertyExpression property = 1;
+    ClassExpression filler = 2;
+    int32 cardinality = 3;
+}
+
+message ObjectExactCardinality {
+    ObjectPropertyExpression property = 1;
+    ClassExpression filler = 2;
+    int32 cardinality = 3;
+}
+
+message ObjectHasSelf {
+    ObjectPropertyExpression property = 1;
+}
+
+
+message DataRange {
+    oneof dataRange {
+        Datatype Datatype = 1;
+        DataOneOf DataOneOf = 2;
+        DataIntersectionOf DataIntersectionOf = 3;
+        DataUnionOf DataUnionOf = 4;
+        DataComplementOf DataComplementOf = 5;
+        DatatypeRestriction DatatypeRestriction = 6;
+    }
+}
+
+message DataOneOf {
+    repeated Literal literals = 1;
+}
+
+message DataIntersectionOf {
+    repeated DataRange dataRanges = 1;
+}
+
+message DataUnionOf {
+    repeated DataRange dataRanges = 1;
+}
+
+message DataComplementOf {
+    DataRange complementedDataRange = 1;
+}
+
+message DatatypeRestriction {
+    Datatype datatype = 1;
+    repeated DatatypeFacetRestriction facetRestrictions = 2;
+}
+
+message DatatypeFacetRestriction {
+    Iri facetIri = 1;
+    Literal facetValue = 2;
+}
+
+message DataSomeValuesFrom {
+    DataProperty property = 1;
+    DataRange filler = 2;
+}
+
+message DataAllValuesFrom {
+    DataProperty property = 1;
+    DataRange filler = 2;
+}
+
+message DataHasValue {
+    DataProperty property = 1;
+    Literal filler = 2;
+}
+
+message DataMinCardinality {
+    DataProperty property = 1;
+    DataRange filler = 2;
+    int32 cardinality = 3;
+}
+
+message DataMaxCardinality {
+    DataProperty property = 1;
+    DataRange filler = 2;
+    int32 cardinality = 3;
+}
+
+message DataExactCardinality {
+    DataProperty property = 1;
+    DataRange filler = 2;
+    int32 cardinality = 3;
+}
+
+message AnnotationValue {
+    oneof annotationValue {
+        Literal Literal = 1;
+        Iri Iri = 2;
+        AnonymousIndividual AnonymousIndividual = 3;
+    }
+}
+
+message AnnotationSubject {
+    oneof annotationSubject {
+        Iri Iri = 1;
+        AnonymousIndividual AnonymousIndividual = 2;
+    }
+}
+
+message Annotation {
+    AnnotationProperty annotationProperty = 1;
+    AnnotationValue annotationValue = 2;
+}
+
+message Axiom {
+    oneof axiom {
+        Declaration Declaration = 1;
+        SubClassOf SubClassOf = 2;
+        ClassAssertion ClassAssertion = 3;
+        AnnotationAssertion AnnotationAssertion = 4;
+    }
+}
+
+message Declaration {
+    Entity entity = 1;
+    repeated Annotation annotations = 2;
+}
+
+message SubClassOf {
+    ClassExpression subCls = 1;
+    ClassExpression superCls = 2;
+    repeated Annotation annotations = 3;
+}
+
+message EquivalentClasses {
+    repeated ClassExpression classExpressions = 1;
+    repeated Annotation annotations = 2;
+}
+
+message DisjointClasses {
+    repeated ClassExpression classExpressions = 1;
+    repeated Annotation annotations = 2;
+}
+
+message ClassAssertion {
+    ClassExpression classExpr = 1;
+    Individual individual = 2;
+    repeated Annotation annotations = 3;
+}
+
+message AnnotationAssertion {
+    AnnotationProperty annotationProperty = 1;
+    AnnotationSubject annotationSubject = 2;
+    AnnotationValue annotationValue = 3;
+    repeated Annotation annotations = 4;
+}
+
+
